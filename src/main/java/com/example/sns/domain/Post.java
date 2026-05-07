@@ -36,7 +36,7 @@ public class Post {
         this.user = user;
     }
 
-    // 수정 기능을 위한 메서드
+    // 수정 기능을 위한 함수
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
