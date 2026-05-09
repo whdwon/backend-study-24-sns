@@ -1,4 +1,4 @@
-package com.example.sns.domain;
+package com.example.sns.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

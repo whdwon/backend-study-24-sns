@@ -1,4 +1,4 @@
-package com.example.sns.domain;
+package com.example.sns.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,14 +33,18 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     // 양방향 1:N 관계 매핑 어노테이션
     // (사용자 한 명이 여러 게시글을 가짐, 주인이 아닌 쪽이므로 mappedBy로 주인 지정)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
     // 테스트 및 데이터 생성을 위한 생성자
-    public User(String username, String email) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
+        this.password = password;
     }
 }
