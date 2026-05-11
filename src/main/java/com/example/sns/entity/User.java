@@ -1,6 +1,7 @@
 package com.example.sns.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import java.util.List;
 @Entity
 // Getter method를 자동 생성하는 어노테이션
 @Getter
-// 인자 없는 default constructor 자동 생성하는 어노테이션 (public User(){} 와 같은 역할)
-@NoArgsConstructor
+// 인자 없는 default constructor 자동 생성하는 어노테이션 (protected User(){} 와 같은 역할)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 // DB테이블의 이름을 정하는 어노테이션 (여기선 users로 설정)
 @Table(name = "users")
 public class User {

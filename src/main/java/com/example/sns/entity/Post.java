@@ -1,13 +1,14 @@
 package com.example.sns.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 // 중복되는 어노테이션 설명은 User에 있음
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "posts")
 public class Post {
 

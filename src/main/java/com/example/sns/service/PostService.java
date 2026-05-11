@@ -30,6 +30,7 @@ public class PostService {
     }
 
     // 전체 조회
+    @Transactional(readOnly = true) // 수정 불가 오버라이드
     public List<PostResponseDto> getAllPosts() {
         List<Post> posts = postRepository.findAll();
         return posts.stream()
