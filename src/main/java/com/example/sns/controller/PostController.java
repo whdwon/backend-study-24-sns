@@ -3,7 +3,10 @@ package com.example.sns.controller;
 import com.example.sns.dto.PostRequestDto;
 import com.example.sns.dto.PostResponseDto;
 import com.example.sns.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +20,31 @@ public class PostController {
 
     // 1. 게시글 작성
     @PostMapping
-    public String create(@RequestBody PostRequestDto requestDto) {
+    public ResponseEntity<String> create(@RequestBody @Valid PostRequestDto requestDto) {
         postService.createPost(requestDto);
-        return "게시글 작성 완료!";
+        // 새로운 리소스가 생성되었으므로 201 Created를 반환하는 것이 표준
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 2. 전체 조회
     @GetMapping
-    public List<PostResponseDto> list() {
-        return postService.getAllPosts();
+    public ResponseEntity<List<PostResponseDto>> list() {
+        List<PostResponseDto> posts = postService.getAllPosts();
+        // 데이터 조회 성공 시 200 OK와 함께 리스트 반환
+        return ResponseEntity.ok(postService.getAllPosts());
     }
 
     // 3. 수정
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid PostRequestDto requestDto) {
         postService.updatePost(id, requestDto);
-        return "게시글 수정 완료!";
+        return ResponseEntity.ok().build(); // 200 OK
     }
 
     // 4. 삭제
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         postService.deletePost(id);
-        return "게시글 삭제 완료!";
+        return ResponseEntity.noContent().build(); // 204 전달
     }
 }
