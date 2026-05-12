@@ -4,11 +4,17 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 // 중복되는 어노테이션 설명은 User에 있음
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "posts")
 public class Post {
 
@@ -23,6 +29,13 @@ public class Post {
     // (세부설정에서 DB의 열 타입을 TEXT로 지정, 수만 글자 이상 저장 가능)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @CreatedDate // 생성 시 자동 저장
+    @Column(updatable = false) // 생성 시간은 수정 불가능하게 설정
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate // 수정 시 자동 저장
+    private LocalDateTime updatedAt;
 
     // 양방향 N:1 관계 매핑 어노테이션 (여러 게시글을 사용자 한 명이 가짐)
     @ManyToOne(fetch = FetchType.LAZY)
