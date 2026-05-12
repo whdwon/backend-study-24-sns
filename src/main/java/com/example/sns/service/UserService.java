@@ -19,6 +19,11 @@ public class UserService {
     // 유저 등록 (회원가입)
     @Transactional // 저장할 때는 쓰기 권한이 필요함
     public UserResponseDto createUser(UserRequestDto dto) {
+        // 중복 이메일 체크
+        if (userRepository.existsByEmail(dto.email())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + dto.email());
+        }
+
         User user = new User(dto.username(), dto.email(), dto.password());
         User savedUser = userRepository.save(user);
 
