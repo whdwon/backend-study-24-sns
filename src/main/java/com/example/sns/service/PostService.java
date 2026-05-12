@@ -10,6 +10,7 @@ import com.example.sns.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; // @Transactional 어노테이션
+
 import java.util.List; // List 타입 사용
 
 // 이 클래스가 Service임을 선언하는 어노테이션
