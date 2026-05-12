@@ -38,8 +38,17 @@ public class Post {
     }
 
     // 수정 기능을 위한 함수
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+    // 제목만 수정
+    public void updateTitle(String title) {
+        if (title != null && !title.isBlank()) {
+            this.title = title;
+        }
+    }
+
+    // 내용만 수정
+    public void updateContent(String content) {
+        if (content != null && !content.isBlank()) {
+            this.content = content;
+        }
     }
 }

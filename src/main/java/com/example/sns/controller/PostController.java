@@ -1,7 +1,8 @@
 package com.example.sns.controller;
 
-import com.example.sns.dto.PostRequestDto;
+import com.example.sns.dto.PostCreateRequestDto;
 import com.example.sns.dto.PostResponseDto;
+import com.example.sns.dto.PostUpdateRequestDto;
 import com.example.sns.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class PostController {
 
     // 1. 게시글 작성
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody @Valid PostRequestDto requestDto) {
+    public ResponseEntity<String> create(@RequestBody @Valid PostCreateRequestDto requestDto) {
         postService.createPost(requestDto);
         // 새로운 리소스가 생성되었으므로 201 Created를 반환하는 것이 표준
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -34,11 +35,11 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPosts());
     }
 
-    // 3. 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid PostRequestDto requestDto) {
+    // 3. 수정 (일부 수정 허용)
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid PostUpdateRequestDto requestDto) {
         postService.updatePost(id, requestDto);
-        return ResponseEntity.ok().build(); // 200 OK
+        return ResponseEntity.ok().build();
     }
 
     // 4. 삭제
