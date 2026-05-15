@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true) // 기본적으로 읽기 전용으로 설정 (성능 최적화)
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -25,6 +25,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
     // 댓글 작성
+    @Transactional // 쓰기 권한이 필요함
     public void createComment(Long postId, CommentCreateRequestDto dto) {
         // userId로 DB에서 User 객체를 찾아옴
         User user = userRepository.findById(dto.userId())
@@ -37,7 +38,6 @@ public class CommentService {
     }
 
     // 댓글 조회
-    @Transactional(readOnly = true)
     public List<CommentResponseDto> getComments(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
@@ -54,6 +54,7 @@ public class CommentService {
     }
 
     // 댓글 수정
+    @Transactional // 쓰기 권한이 필요함
     public void updateComment(Long commentId, CommentUpdateRequestDto dto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
@@ -62,6 +63,7 @@ public class CommentService {
     }
 
     // 댓글 삭제
+    @Transactional // 쓰기 권한이 필요함
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }
