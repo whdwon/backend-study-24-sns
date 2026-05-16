@@ -32,12 +32,12 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    // 양방향 N:1 관계 매핑 어노테이션 (여러 댓글을 사용자 한 명이 가짐)
+    // 단방향 N:1 관계 매핑 어노테이션 (여러 댓글을 사용자 한 명이 가짐)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // 양방향 N:1 관계 매핑 어노테이션 (여러 댓글을 하나의 게시글이 가짐)
+    // 단방향 N:1 관계 매핑 어노테이션 (여러 댓글을 하나의 게시글이 가짐)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
