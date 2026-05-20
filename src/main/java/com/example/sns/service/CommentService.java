@@ -42,7 +42,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
         // Entity -> Dto 변환하여 리턴
-        return commentRepository.findByPost(post).stream()
+        return commentRepository.findByPostWithUser(post).stream()
                 .map(comment -> new CommentResponseDto(
                         comment.getId(),
                         comment.getContent(),

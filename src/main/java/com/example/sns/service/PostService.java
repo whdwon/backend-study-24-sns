@@ -34,9 +34,16 @@ public class PostService {
 
     // 전체 조회
     public List<PostResponseDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllWithUser();
         return posts.stream()
-                .map(post -> new PostResponseDto(post.getId(), post.getTitle(), post.getContent(), post.getUser().getUsername(), post.getCreatedAt(), post.getUpdatedAt()))
+                .map(post -> new PostResponseDto(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getUser().getUsername(),
+                        post.getCreatedAt(),
+                        post.getUpdatedAt()
+                ))
                 .toList();
     }
 

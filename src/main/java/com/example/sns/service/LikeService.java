@@ -46,7 +46,7 @@ public class LikeService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
 
-        List<Like> likes = likeRepository.findByPost(post);
+        List<Like> likes = likeRepository.findByPostWithUser(post);
 
         List<String> usernames = likes.stream()
                 .map(like -> like.getUser().getUsername())
