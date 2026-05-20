@@ -6,6 +6,9 @@ import com.example.sns.dto.CommentUpdateRequestDto;
 import com.example.sns.entity.Comment;
 import com.example.sns.entity.Post;
 import com.example.sns.entity.User;
+import com.example.sns.exception.CommentNotFoundException;
+import com.example.sns.exception.PostNotFoundException;
+import com.example.sns.exception.UserNotFoundException;
 import com.example.sns.repository.CommentRepository;
 import com.example.sns.repository.PostRepository;
 import com.example.sns.repository.UserRepository;
@@ -29,10 +32,10 @@ public class CommentService {
     public void createComment(Long postId, CommentCreateRequestDto dto) {
         // userId로 DB에서 User 객체를 찾아옴
         User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException(dto.userId()));
         // postId로 DB에서 Post 객체를 찾아옴
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new PostNotFoundException(postId));
         // Comment 객체를 만들어서 저장
         commentRepository.save(new Comment(dto.content(), user, post));
     }
@@ -40,7 +43,7 @@ public class CommentService {
     // 댓글 조회
     public List<CommentResponseDto> getComments(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new PostNotFoundException(postId));
         // Entity -> Dto 변환하여 리턴
         return commentRepository.findByPostWithUser(post).stream()
                 .map(comment -> new CommentResponseDto(
@@ -57,7 +60,7 @@ public class CommentService {
     @Transactional // 쓰기 권한이 필요함
     public void updateComment(Long commentId, CommentUpdateRequestDto dto) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
         // @Transactional 덕분에 comment.updateContent()만 호출해도 자동으로 DB에 반영됨
         comment.updateContent(dto.content());
     }
