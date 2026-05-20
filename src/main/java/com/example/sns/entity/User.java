@@ -13,6 +13,8 @@ import java.util.List;
 // Getter method를 자동 생성하는 어노테이션
 @Getter
 // 인자 없는 default constructor 자동 생성하는 어노테이션 (protected User(){} 와 같은 역할)
+// JPA가 DB 조회하여 리플렉션(자바 런타임에서 클래스의 구조를 검사하고 동적으로 객체를 생성)하므로 꼭 필요함.
+// JPA만 접근 가능하도록 protected 설정
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // DB테이블의 이름을 정하는 어노테이션 (여기선 users로 설정)
 @Table(name = "users")

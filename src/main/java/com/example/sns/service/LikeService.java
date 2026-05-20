@@ -4,6 +4,8 @@ import com.example.sns.dto.LikeResponseDto;
 import com.example.sns.entity.Like;
 import com.example.sns.entity.Post;
 import com.example.sns.entity.User;
+import com.example.sns.exception.PostNotFoundException;
+import com.example.sns.exception.UserNotFoundException;
 import com.example.sns.repository.LikeRepository;
 import com.example.sns.repository.PostRepository;
 import com.example.sns.repository.UserRepository;
@@ -27,9 +29,9 @@ public class LikeService {
     @Transactional
     public void toggleLike(Long postId, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException(userId));
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new PostNotFoundException(postId));
 
         Optional<Like> existing = likeRepository.findByUserAndPost(user, post);
 
@@ -44,9 +46,9 @@ public class LikeService {
     // 좋아요 조회 (유저 수, 유저 목록)
     public LikeResponseDto getLikes(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new PostNotFoundException(postId));
 
-        List<Like> likes = likeRepository.findByPost(post);
+        List<Like> likes = likeRepository.findByPostWithUser(post);
 
         List<String> usernames = likes.stream()
                 .map(like -> like.getUser().getUsername())

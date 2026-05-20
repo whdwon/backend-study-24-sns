@@ -3,6 +3,7 @@ package com.example.sns.service;
 import com.example.sns.dto.UserRequestDto;
 import com.example.sns.dto.UserResponseDto;
 import com.example.sns.entity.User;
+import com.example.sns.exception.DuplicateEmailException;
 import com.example.sns.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class UserService {
     public UserResponseDto createUser(UserRequestDto dto) {
         // 중복 이메일 체크
         if (userRepository.existsByEmail(dto.email())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + dto.email());
+            throw new DuplicateEmailException(dto.email());
         }
 
         User user = new User(dto.username(), dto.email(), dto.password());
