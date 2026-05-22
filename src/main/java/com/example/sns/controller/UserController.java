@@ -1,5 +1,7 @@
 package com.example.sns.controller;
 
+import com.example.sns.dto.LoginRequestDto;
+import com.example.sns.dto.LoginResponseDto;
 import com.example.sns.dto.UserRequestDto;
 import com.example.sns.dto.UserResponseDto;
 import com.example.sns.service.UserService;
@@ -17,7 +19,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    // 1. 유저 생성 (회원 가입)
+    // 유저 생성 (회원 가입)
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto dto) {
         // @Valid로 검증하고, 201 Created 상태 코드로 응답
@@ -25,7 +27,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    // 2. 유저 전체 조회
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto dto) {
+        LoginResponseDto response = userService.login(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    // 유저 전체 조회
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         List<UserResponseDto> users = userService.getAllUsers();

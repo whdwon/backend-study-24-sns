@@ -1,5 +1,8 @@
 package com.example.sns.service;
 
+import com.example.sns.auth.JwtUtil;
+import com.example.sns.dto.LoginRequestDto;
+import com.example.sns.dto.LoginResponseDto;
 import com.example.sns.dto.UserRequestDto;
 import com.example.sns.dto.UserResponseDto;
 import com.example.sns.entity.User;
@@ -17,6 +20,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     // 유저 등록 (회원가입)
     @Transactional // 저장할 때는 쓰기 권한이 필요함
@@ -31,6 +35,22 @@ public class UserService {
 
         // 엔티티를 응답 DTO로 변환해서 반환
         return new UserResponseDto(savedUser.getId(), savedUser.getUsername());
+    }
+
+    // 로그인
+    public LoginResponseDto login(LoginRequestDto dto) {
+        // 1. 이메일로 유저 찾기
+        User user = userRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
+
+        // 2. 비밀번호 확인
+        if (!user.getPassword().equals(dto.password())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        // 3. JWT 발급
+        String token = jwtUtil.generateToken(user.getId());
+        return new LoginResponseDto(token);
     }
 
     // 유저 전체 조회 (테스트용)

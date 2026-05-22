@@ -21,3 +21,7 @@ spring:
       hibernate:
         format_sql: true # SQL을 보기 좋게 정렬해줍니다.
     database-platform: org.hibernate.dialect.H2Dialect
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 3600000  # 1시간 (밀리초)
