@@ -1,9 +1,6 @@
 package com.example.sns.controller;
 
-import com.example.sns.dto.LoginRequestDto;
-import com.example.sns.dto.LoginResponseDto;
-import com.example.sns.dto.UserRequestDto;
-import com.example.sns.dto.UserResponseDto;
+import com.example.sns.dto.*;
 import com.example.sns.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +29,12 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto dto) {
         LoginResponseDto response = userService.login(dto);
         return ResponseEntity.ok(response);
+    }
+
+    // 토큰 재발급
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponseDto> refresh(@RequestBody @Valid RefreshRequestDto dto) {
+        return ResponseEntity.ok(userService.reissueAccessToken(dto));
     }
 
     // 유저 전체 조회

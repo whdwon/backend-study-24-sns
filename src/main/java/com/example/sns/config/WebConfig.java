@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")      // 모든 api 경로에 적용
                 .excludePathPatterns(            // 아래 경로는 제외
                         "/api/users",            // 회원가입
-                        "/api/users/login"       // 로그인
+                        "/api/users/login",       // 로그인
+                        "/api/users/refresh"    // 토큰 재발급
                 );
     }
 }
