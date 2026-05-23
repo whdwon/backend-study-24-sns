@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,13 +23,23 @@ public class RefreshToken {
     @Column(nullable = false)
     private String token;
 
-    public RefreshToken(Long userId, String token) {
+    @Column(nullable = false)
+    private LocalDateTime expiresAt;
+
+    public RefreshToken(Long userId, String token, LocalDateTime expiresAt) {
         this.userId = userId;
         this.token = token;
+        this.expiresAt = expiresAt;
     }
 
     // 토큰 갱신
-    public void updateToken(String token) {
+    public void updateToken(String token, LocalDateTime expiresAt) {
         this.token = token;
+        this.expiresAt = expiresAt;
+    }
+
+    // 만료 여부 확인
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expiresAt);
     }
 }

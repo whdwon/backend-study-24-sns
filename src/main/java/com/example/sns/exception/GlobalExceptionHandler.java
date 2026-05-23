@@ -43,6 +43,20 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse("DUPLICATE_EMAIL", e.getMessage()));
     }
 
+    // RefreshToken 찾을 수 없음
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRefreshTokenNotFound(RefreshTokenNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse("REFRESH_TOKEN_NOT_FOUND", e.getMessage()));
+    }
+
+    // RefreshToken 만료
+    @ExceptionHandler(RefreshTokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleRefreshTokenExpired(RefreshTokenExpiredException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse("REFRESH_TOKEN_EXPIRED", e.getMessage()));
+    }
+
     // 그 외 모든 예외
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAll(Exception e) {

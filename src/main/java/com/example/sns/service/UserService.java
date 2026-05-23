@@ -6,12 +6,15 @@ import com.example.sns.entity.RefreshToken;
 import com.example.sns.entity.User;
 import com.example.sns.exception.DuplicateEmailException;
 import com.example.sns.exception.InvalidLoginException;
+import com.example.sns.exception.RefreshTokenExpiredException;
+import com.example.sns.exception.RefreshTokenNotFoundException;
 import com.example.sns.repository.RefreshTokenRepository;
 import com.example.sns.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,12 +56,13 @@ public class UserService {
         // 3. JWT 발급
         String accessToken = jwtUtil.generateAccessToken(user.getId());
         String refreshToken = jwtUtil.generateRefreshToken();
+        LocalDateTime expiresAt = jwtUtil.getRefreshTokenExpiresAt();
 
         // DB에 Refresh Token 저장 (이미 있으면 갱신)
         refreshTokenRepository.findByUserId(user.getId())
                 .ifPresentOrElse(
-                        token -> token.updateToken(refreshToken),
-                        () -> refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken))
+                        token -> token.updateToken(refreshToken, expiresAt),
+                        () -> refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken, expiresAt))
                 );
 
         return new LoginResponseDto(accessToken, refreshToken);
@@ -68,9 +72,14 @@ public class UserService {
     public TokenResponseDto reissueAccessToken(RefreshRequestDto dto) {
         // 1. DB에서 Refresh Token 확인
         RefreshToken refreshToken = refreshTokenRepository.findByToken(dto.refreshToken())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 Refresh Token입니다."));
+                .orElseThrow(RefreshTokenNotFoundException::new);
 
-        // 2. 새 Access Token 발급
+        // 2. 만료 여부 확인
+        if (refreshToken.isExpired()) {
+            throw new RefreshTokenExpiredException();
+        }
+
+        // 3. 새 Access Token 발급
         String newAccessToken = jwtUtil.generateAccessToken(refreshToken.getUserId());
 
         return new TokenResponseDto(newAccessToken);
