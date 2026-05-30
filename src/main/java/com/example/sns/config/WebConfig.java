@@ -28,7 +28,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(cookieJwtInterceptor)
                 .addPathPatterns("/view/**")
                 .excludePathPatterns(
-                        "/view/login"
+                        "/view/login",
+                        "/view/register"
                 );
     }
 }
