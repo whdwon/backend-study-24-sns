@@ -21,7 +21,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(            // 아래 경로는 제외
                         "/api/users",            // 회원가입
                         "/api/users/login",       // 로그인
-                        "/api/users/refresh"    // 토큰 재발급
+                        "/api/users/refresh",    // 토큰 재발급
+                        "/h2-console/**",        // H2 콘솔 (개발용)
+                        "/swagger-ui/**",        // Swagger UI
+                        "/v3/api-docs/**"        // Swagger API 명세 JSON
                 );
 
         // 뷰 인터셉터 (쿠키 방식) - 로그인 페이지 제외
