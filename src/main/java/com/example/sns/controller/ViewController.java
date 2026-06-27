@@ -1,5 +1,6 @@
 package com.example.sns.controller;
 
+import com.example.sns.auth.CustomUserDetails;
 import com.example.sns.dto.FollowResponseDto;
 import com.example.sns.dto.LoginRequestDto;
 import com.example.sns.dto.LoginResponseDto;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -98,8 +100,8 @@ public class ViewController {
 
     // 마이페이지
     @GetMapping("/mypage")
-    public String mypage(HttpServletRequest request, Model model) {
-        Long userId = (Long) request.getAttribute("userId");
+    public String mypage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        Long userId = userDetails.getUserId();
 
         User user = userRepository.findById(userId)
                 .orElse(null);
