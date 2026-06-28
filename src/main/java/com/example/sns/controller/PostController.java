@@ -8,6 +8,10 @@ import com.example.sns.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,10 +36,16 @@ public class PostController {
 
     // 2. 전체 조회
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> list() {
-        List<PostResponseDto> posts = postService.getAllPosts();
+    // GET /api/posts 시 디폴트값 (GET /api/posts?page=0&size=10&sort=createdAt)
+    // GET /api/posts?page=1&size=5 가능
+    public ResponseEntity<Page<PostResponseDto>> list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         // 데이터 조회 성공 시 200 OK와 함께 리스트 반환
-        return ResponseEntity.ok(postService.getAllPosts());
+        return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 
     // 3. 수정 (일부 수정 허용)
