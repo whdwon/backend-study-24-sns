@@ -39,8 +39,20 @@ public class Follow {
     @JoinColumn(name = "following_id")
     private User following;
 
-    public Follow(User follower, User following) {
+    // 외부에서 직접 new로 생성하지 못하도록 private 생성자 선언
+    private Follow(User follower, User following) {
         this.follower = follower;
         this.following = following;
+    }
+
+    // 팔로우 생성을 담당하는 public static 팩토리 메서드
+    public static Follow create(User follower, User following) {
+        if (follower == null) {
+            throw new IllegalArgumentException("팔로우하는 사용자는 필수입니다.");
+        }
+        if (following == null) {
+            throw new IllegalArgumentException("팔로우받는 사용자는 필수입니다.");
+        }
+        return new Follow(follower, following);
     }
 }

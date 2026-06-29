@@ -32,8 +32,7 @@ public class PostService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        Post post = new Post(dto.title(), dto.content(), user);
-        postRepository.save(post);
+        postRepository.save(Post.create(dto.title(), dto.content(), user));
     }
 
     // 전체 조회

@@ -47,10 +47,24 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
-    // 테스트 및 데이터 생성을 위한 생성자
-    public User(String username, String email, String password) {
+    // 외부에서 직접 new로 생성하지 못하도록 private 생성자 선언
+    private User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    // 유저 객체 생성을 담당하는 public static 팩토리 메서드
+    public static User create(String username, String email, String password) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("이름은 필수입니다.");
+        }
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("이메일은 필수입니다.");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 필수입니다.");
+        }
+        return new User(username, email, password);
     }
 }

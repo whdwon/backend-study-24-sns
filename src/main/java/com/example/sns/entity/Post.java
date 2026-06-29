@@ -43,11 +43,25 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // 게시글 생성을 위한 생성자
-    public Post(String title, String content, User user) {
+    // 외부에서 직접 new로 생성하지 못하도록 private 생성자 선언
+    private Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    // 게시물 생성을 담당하는 public static 팩토리 메서드
+    public static Post create(String title, String content, User user) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("제목은 필수입니다.");
+        }
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("내용은 필수입니다.");
+        }
+        if (user == null) {
+            throw new IllegalArgumentException("작성자는 필수입니다.");
+        }
+        return new Post(title, content, user);
     }
 
     // 값 검증 및 수정 기능을 위한 함수
