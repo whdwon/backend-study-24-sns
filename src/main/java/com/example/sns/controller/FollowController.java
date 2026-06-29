@@ -1,10 +1,12 @@
 package com.example.sns.controller;
 
+import com.example.sns.auth.CustomUserDetails;
 import com.example.sns.dto.FollowResponseDto;
 import com.example.sns.service.FollowService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,10 +20,9 @@ public class FollowController {
     @PostMapping("/follow")
     public ResponseEntity<Void> toggleFollow(
             @PathVariable Long userId,          // 팔로우 대상
-            HttpServletRequest request           // JWT에서 꺼낸 본인 ID
+            @AuthenticationPrincipal CustomUserDetails userDetails           // JWT에서 꺼낸 본인 ID
     ) {
-        Long myId = (Long) request.getAttribute("userId");
-        followService.toggleFollow(userId, myId);
+        followService.toggleFollow(userId, userDetails.getUserId());
         return ResponseEntity.ok().build();
     }
 

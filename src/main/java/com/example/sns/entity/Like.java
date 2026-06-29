@@ -40,8 +40,20 @@ public class Like {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Like(User user, Post post) {
+    // 외부에서 직접 new로 생성하지 못하도록 private 생성자 선언
+    private Like(User user, Post post) {
         this.user = user;
         this.post = post;
+    }
+
+    // 좋아요 생성을 담당하는 public static 팩토리 메서드
+    public static Like create(User user, Post post) {
+        if (user == null) {
+            throw new IllegalArgumentException("사용자는 필수입니다.");
+        }
+        if (post == null) {
+            throw new IllegalArgumentException("게시글은 필수입니다.");
+        }
+        return new Like(user, post);
     }
 }

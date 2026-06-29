@@ -37,7 +37,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));
         // Comment 객체를 만들어서 저장
-        commentRepository.save(new Comment(dto.content(), user, post));
+        commentRepository.save(Comment.create(dto.content(), user, post));
     }
 
     // 댓글 조회

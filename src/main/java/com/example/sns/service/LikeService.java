@@ -39,7 +39,7 @@ public class LikeService {
             likeRepository.delete(existing.get()); // 좋아요 취소
         }
         else {
-            likeRepository.save(new Like(user, post)); // 좋아요 추가
+            likeRepository.save(Like.create(user, post)); // 좋아요 추가
         }
     }
 

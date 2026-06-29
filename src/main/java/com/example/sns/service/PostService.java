@@ -10,6 +10,8 @@ import com.example.sns.exception.UserNotFoundException;
 import com.example.sns.repository.PostRepository;
 import com.example.sns.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; // @Transactional 어노테이션
 
@@ -30,14 +32,12 @@ public class PostService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        Post post = new Post(dto.title(), dto.content(), user);
-        postRepository.save(post);
+        postRepository.save(Post.create(dto.title(), dto.content(), user));
     }
 
     // 전체 조회
-    public List<PostResponseDto> getAllPosts() {
-        List<Post> posts = postRepository.findAllWithUser();
-        return posts.stream()
+    public Page<PostResponseDto> getAllPosts(Pageable pageable) {
+        return postRepository.findAllWithUser(pageable)
                 .map(post -> new PostResponseDto(
                         post.getId(),
                         post.getTitle(),
@@ -45,8 +45,7 @@ public class PostService {
                         post.getUser().getUsername(),
                         post.getCreatedAt(),
                         post.getUpdatedAt()
-                ))
-                .toList();
+                ));
     }
 
     // 3. 수정

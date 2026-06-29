@@ -34,7 +34,7 @@ public class UserService {
             throw new DuplicateEmailException(dto.email());
         }
 
-        User user = new User(dto.username(), dto.email(), dto.password());
+        User user = User.create(dto.username(), dto.email(), dto.password());
         User savedUser = userRepository.save(user);
 
         // 엔티티를 응답 DTO로 변환해서 반환
@@ -62,7 +62,7 @@ public class UserService {
         refreshTokenRepository.findByUserId(user.getId())
                 .ifPresentOrElse(
                         token -> token.updateToken(refreshToken, expiresAt),
-                        () -> refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken, expiresAt))
+                        () -> refreshTokenRepository.save(RefreshToken.create(user.getId(), refreshToken, expiresAt))
                 );
 
         return new LoginResponseDto(accessToken, refreshToken);

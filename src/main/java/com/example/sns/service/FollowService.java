@@ -41,7 +41,7 @@ public class FollowService {
             followRepository.delete(existing.get()); // 언팔로우
         }
         else {
-            followRepository.save(new Follow(follower, following)); // 팔로우
+            followRepository.save(Follow.create(follower, following)); // 팔로우
         }
     }
 

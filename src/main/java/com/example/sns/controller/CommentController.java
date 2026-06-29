@@ -1,5 +1,6 @@
 package com.example.sns.controller;
 
+import com.example.sns.auth.CustomUserDetails;
 import com.example.sns.dto.CommentCreateRequestDto;
 import com.example.sns.dto.CommentResponseDto;
 import com.example.sns.dto.CommentUpdateRequestDto;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class CommentController {
 
     // 댓글 작성: POST /api/posts/1/comments
     @PostMapping
-    public ResponseEntity<Void> create(@PathVariable Long postId, @RequestBody @Valid CommentCreateRequestDto dto, HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+    public ResponseEntity<Void> create(@PathVariable Long postId, @RequestBody @Valid CommentCreateRequestDto dto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getUserId();
         commentService.createComment(postId, dto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build(); // 201
     }
